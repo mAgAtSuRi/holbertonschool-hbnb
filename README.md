@@ -48,31 +48,16 @@ The User class has 2 types of relations with the other classes:
 The multiplicity is always the same: all of the above need only one user to exist, however one user can have any number of reviews, places or reservations.
 
 - Place class:
-	* Attributes: . title
-				. description
-				. price(float)
-				. latitude
-				. longitude
-	* Methods:
-				. create_place()
-				. update_place()
-				. delete_place()
-				. list_places()
+	* Attributes: title, description, price(float), latitude(float), longitude(float)
+	* Methods: create_place(), update_place(), delete_place(), list_places()
 The Place class has 2 types of relations with the other classes:
 	Composition: with the Review and Reservation classes because a review or a reservation have to come from a specific place.
 
 	Aggregation: with the Amenity class. It means that an amenity is independent from a place.
 
 - Review class:
-	* Attributes: . place: Place (from the Place class)
-				. user: User (from the User class)
-				. rating: int
-				. comment
-	* Methods:
-				. create_review()
-				. update_review()
-				. delete_review()
-				. list_reviews()
+	* Attributes: place: Place (from the Place class), user: User (from the User class), rating: int, comment
+	* Methods: create_review(), update_review(), delete_review(), list_reviews()
 Cf the User and Place classes for the different relations and the multiplicity.
 
 - Amenity class:
