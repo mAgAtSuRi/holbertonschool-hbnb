@@ -77,3 +77,25 @@ Cf the User and Place classes for the different relations and the multiplicity.
 Abstract class giving its attributes to all the other classes.
 
 ![Class Diagram](HBNB_Class_Diagram.png)
+
+
+
+3- Sequence Diagrams for API Calls
+
+Here are 4 Sequence diagrams representing the main API calls.
+
+- User Registration: a user submits his informations, then the facade calls createUser() znd the BusinessLogic checks with the Databse if the email already exists. If it does an error message will be sent to the user. Otherwise, the user informations will be saved in the Database and a message "Account created" is sent to the user.
+
+![User registration](Hbnb_Sequence_Diagram_User_Creation.png)
+
+- Place Creation: a user submits all the information of a place to create. The facade calls createPlace() using the BusinessLogic layer that will check with the Database if the user exists. An error message is sent if the user doesn't have an account, otherwise the BusinessLogic will check with the Databse if the place exists. If it does an error message is sent to the user, otherwise the place informations will be saved in the Databse.
+
+![Place Creation](HbnbSequence_Diagram_Place_creation.png)
+
+- Review Submission: a user submits a review. The facade calls createReview() then the BusinessLogic checks with the Database if the user exists. If it doesn't, an error message is sent ot the user. Otherwise the BusinessLogic checks if the place exists. An error message is sent if the place doesn't exist. If everything is good, the review information is saved in the Databse.
+
+![Review Submission](Hbnb_Sequence_Diagram_Review.png)
+
+- Fetching a list of places: a user make a research to find a place with specific criterias. The facade calls listPlaces() and the BusinessLogic checks if a place exists with these criterias. If it doesn't, an empty list is sent to the user, otherwise the BusinessLogic fetches the place info and a list containing all the specific places is sent to the user.
+
+![Fetch a List of Places](Hbnb_Sequence_Diagram_List_Places.png)
