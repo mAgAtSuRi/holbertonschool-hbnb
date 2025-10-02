@@ -96,6 +96,6 @@ Here are 4 Sequence diagrams representing the main API calls.
 
 ![Review Submission](Hbnb_Sequence_Diagram_Review.png)
 
-- Fetching a list of places: a user make a research to find a place with specific criterias. The facade calls listPlaces() and the BusinessLogic checks if a place exists with these criterias. If it doesn't, an empty list is sent to the user, otherwise the BusinessLogic fetches the place info and a list containing all the specific places is sent to the user.
+- Fetching a list of places: a user creates a research to find a place with specific criterias. The facade calls listPlaces() and the BusinessLogic checks if a place exists with these criterias. If it doesn't, an empty list is sent to the user, otherwise the BusinessLogic fetches the place info and a list containing all the specific places is sent to the user.
 
 ![Fetch a List of Places](Hbnb_Sequence_Diagram_List_Places.png)
