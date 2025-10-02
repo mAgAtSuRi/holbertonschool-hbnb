@@ -76,31 +76,19 @@ The Place class has 2 types of relations with the other classes:
 Cf the User and Place classes for the different relations and the multiplicity.
 
 - Amenity class:
-	* Attributes: . name
-				. description
+	* Attributes: name, description
 
-	* Methods:
-				. create_review()
-				. update_review()
-				. delete_review()
-				. list_reviews()
+	* Methods: create_review(), update_review(), delete_review(), list_reviews()
 Cf the Place classe for the relation and the multiplicity.
 
 - Reservation class:
-	* Attributes: . startDate: date
-				. endDate: date
-				. totalPrice: float
+	* Attributes: startDate: date, endDate: date, totalPrice: float
 
-	* Methods:
-				. book()
-				. update_reservation()
-				. cancel_booking()
+	* Methods: book(), update_reservation(), cancel_booking()
 Cf the User and Place classes for the different relations and the multiplicity.
 
 - Base class (abstract):
-	* Attributes: . id
-				. created_time
-				. updated_time
+	* Attributes: id, created_time, updated_time
 Abstract class giving its attributes to all the other classes.
 
 ![Class Diagram](HBNB_Class_Diagram.png)
