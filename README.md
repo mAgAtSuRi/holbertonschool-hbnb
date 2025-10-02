@@ -23,6 +23,7 @@ Please find below the Package Diagram of the 3 Layers system. The relationship b
 ![Package Diagram](Hbnb_Package_Diagram.png)
 
 
+
 2- Class Diagram for Business Logic Layer
 
 The Class Diagram includes the 4 base classes mentionned above (User, Place, Review and Amenity) but also a Reservation class. Additionnally, all these classes inherits from the Base class that provides an id, a created_time and an updated_time.
@@ -30,12 +31,12 @@ The Class Diagram includes the 4 base classes mentionned above (User, Place, Rev
 Now let's dive into each class:
 
 - User class:
-	Attributes: . first_name
+	* Attributes: . first_name
 				. last_name
 				. email
 				. password
 				. is_admin (boolean)
-	Methods:
+	* Methods:
 				. register()
 				. update_info()
 				. delete()
@@ -47,12 +48,12 @@ The User class has 2 types of relations with the other classes:
 The multiplicity is always the same: all of the above need only one user to exist, however one user can have any number of reviews, places or reservations.
 
 - Place class:
-	Attributes: . title
+	* Attributes: . title
 				. description
 				. price(float)
 				. latitude
 				. longitude
-	Methods:
+	* Methods:
 				. create_place()
 				. update_place()
 				. delete_place()
@@ -63,11 +64,11 @@ The Place class has 2 types of relations with the other classes:
 	Aggregation: with the Amenity class. It means that an amenity is independent from a place.
 
 - Review class:
-	Attributes: . place: Place (from the Place class)
+	* Attributes: . place: Place (from the Place class)
 				. user: User (from the User class)
 				. rating: int
 				. comment
-	Methods:
+	* Methods:
 				. create_review()
 				. update_review()
 				. delete_review()
@@ -75,29 +76,29 @@ The Place class has 2 types of relations with the other classes:
 Cf the User and Place classes for the different relations and the multiplicity.
 
 - Amenity class:
-	Attributes: . name
+	* Attributes: . name
 				. description
 
-	Methods:
+	* Methods:
 				. create_review()
 				. update_review()
 				. delete_review()
 				. list_reviews()
 Cf the Place classe for the relation and the multiplicity.
 
--Reservation class:
-	Attributes: . startDate: date
+- Reservation class:
+	* Attributes: . startDate: date
 				. endDate: date
 				. totalPrice: float
 
-	Methods:
+	* Methods:
 				. book()
 				. update_reservation()
 				. cancel_booking()
 Cf the User and Place classes for the different relations and the multiplicity.
 
--Base class (abstract):
-	Attributes: . id
+- Base class (abstract):
+	* Attributes: . id
 				. created_time
 				. updated_time
 Abstract class giving its attributes to all the other classes.
