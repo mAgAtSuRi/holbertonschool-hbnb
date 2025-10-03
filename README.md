@@ -31,15 +31,8 @@ The Class Diagram includes the 4 base classes mentionned above (User, Place, Rev
 Now let's dive into each class:
 
 - User class:
-	* Attributes: . first_name
-				. last_name
-				. email
-				. password
-				. is_admin (boolean)
-	* Methods:
-				. register()
-				. update_info()
-				. delete()
+	* Attributes: first_name, last_name, email, password, is_admin (boolean)
+	* Methods: register(), update_info(), delete()
 The User class has 2 types of relations with the other classes:
 	Composition: with the Place and Reservation classes because a place or a reservation have to come from a registered user.
 
