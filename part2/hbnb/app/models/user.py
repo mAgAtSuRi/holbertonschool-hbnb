@@ -8,20 +8,25 @@ class User(Base):
         self.first_name = first_name
         self.last_name = last_name
         self.email = email
-        self.password = generate_password_hash(password)
+        self.__password = generate_password_hash(password)
         self.is_admin = is_admin
 
+    @property
+    def password(self):
+        raise AttributeError("Acces to password is forbidden")
+    
+    @password.setter
+    def password(self, value):
+        self.__password = generate_password_hash(value)
+    
     def check_password(self, password):
-        return check_password_hash(self.password, password)
+        return check_password_hash(self.__password, password)
 
     def update(self, data):
         """Update the attributes of the User instance,
         including password hashing if needed"""
 
-        allowed_changed = {"first_name", "last_name", "email", "password"}
-        for key, value in data.items():
-            if key in allowed_changed:
-                if key == "password":
-                    value = generate_password_hash(value)
-                setattr(self, key, value)
-        self.save()
+        if "password" in data:
+            self.__password = generate_password_hash(data["password"])
+#       call update without password
+        super().update({k: v for k, v in data.items() if k != "password"})

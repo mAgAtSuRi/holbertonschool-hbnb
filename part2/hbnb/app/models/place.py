@@ -22,10 +22,7 @@ class Place(Base):
         self.amenities.append(amenity)
     
     def update(self, data):
-        """Update the attributes of the Place instance based on a dictionary"""
-        allowed_changed = {"title", "description", "price",
-                           "latitude", "longitude", "owner"}
-        for key, value in data.items():
-            if key in allowed_changed:
-                setattr(self, key, value)
-        self.save()
+        """Prevent changing owner"""
+        if "owner" in data:
+            raise ValueError("Can't change the owner of a place.")
+        super().update(data)
