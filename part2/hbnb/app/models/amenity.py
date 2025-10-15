@@ -6,3 +6,10 @@ class Amenity(Base):
         super().__init__()
         self.name = name
         self.description = description
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "description": self.description,
+        }

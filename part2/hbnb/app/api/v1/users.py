@@ -60,7 +60,7 @@ class UserResource(Resource):
             "last_name": user.last_name,
             "email": user.email,
         }, 200
-    
+   
     @api.response(200, "User details retrieved successfully")
     @api.response(400, "Bad request")
     @api.response(404, "User not found")  
