@@ -30,3 +30,11 @@ class User(Base):
             self.__password = generate_password_hash(data["password"])
 #       call update without password
         super().update({k: v for k, v in data.items() if k != "password"})
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "first_name": self.first_name,
+            "last_name": self.last_name,
+            "email": self.email
+        }
