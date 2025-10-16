@@ -15,6 +15,16 @@ class Place(Base):
         self.amenities = []  # List to store related amenities
 
     @property
+    def title(self):
+        return self._title
+    
+    @title.setter
+    def title(self, value):
+        if not value or not value.strip():
+            raise ValueError("Title can't be empty")
+        self._title = value
+
+    @property
     def price(self):
         return self._price
     

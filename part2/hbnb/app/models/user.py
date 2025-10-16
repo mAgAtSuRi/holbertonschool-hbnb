@@ -1,5 +1,6 @@
 from .base import Base
 from werkzeug.security import generate_password_hash, check_password_hash
+import re
 
 
 class User(Base):
@@ -10,6 +11,41 @@ class User(Base):
         self.email = email
         self.__password = generate_password_hash(password)
         self.is_admin = is_admin
+
+    @property
+    def first_name(self):
+        return self._first_name
+    
+    @first_name.setter
+    def first_name(self, value):
+        if not value or not value.strip():
+            raise ValueError("First name can't be empty")
+        self._first_name = value
+
+    @property
+    def last_name(self):
+        return self._last_name
+    
+    @last_name.setter
+    def last_name(self, value):
+        if not value or not value.strip():
+            raise ValueError("Last name can't be empty")
+        self._last_name = value
+
+    @property
+    def email(self):
+        return self._email
+    
+    @email.setter
+    def email(self, value):
+        if not value or not value.strip():
+            raise ValueError("Email can't be empty")
+
+        email_pattern = r'^[\w\.-]+@[\w\.-]+\.\w+$'
+        if not re.match(email_pattern, value):
+            raise ValueError("Invalid email format.")
+
+        self._email = value.strip()
 
     @property
     def password(self):
