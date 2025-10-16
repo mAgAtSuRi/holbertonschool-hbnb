@@ -1,5 +1,5 @@
 from flask_restx import Namespace, Resource, fields
-from app.services import facade
+from ...services import facade
 
 api = Namespace('places', description='Place operations')
 
@@ -40,22 +40,51 @@ class PlaceList(Resource):
         """Register a new place"""
         # Placeholder for the logic to register a new place
         place_data = api.payload
-        
+
+        required_field = ["title", "description", "price", "latitude",
+                          "longitude", "owner_id"]
+        for field in required_field:
+            if not place_data.get(field):
+                return {"error": f"Missing required field: {field}"}, 400
+
+        try:
+            new_place = facade.create_place(place_data)
+            return new_place.to_dict(), 201
+        except ValueError as e:
+            return {"error": str(e)}, 400
 
     @api.response(200, 'List of places retrieved successfully')
     def get(self):
         """Retrieve a list of all places"""
         # Placeholder for logic to return a list of all places
-        pass
+        places = facade.get_all_places()
+        return [{"id": place.id, "title": place.title,
+                "latitude": place.latitude, "longitude": place.longitude}
+                for place in places]
 
 @api.route('/<place_id>')
 class PlaceResource(Resource):
     @api.response(200, 'Place details retrieved successfully')
     @api.response(404, 'Place not found')
     def get(self, place_id):
-        """Get place details by ID"""
-        # Placeholder for the logic to retrieve a place by ID, including associated owner and amenities
-        pass
+        place = facade.get_place(place_id)
+        if not place:
+            return {"error": "Place not found"}, 404
+
+        owner = facade.get_user(place.owner_id)
+        if not owner:
+            return {"error": "Owner not found"}, 404
+
+        data = place.to_dict()
+        data["owner"] = {
+            "id": owner.id,
+            "first_name": owner.first_name,
+            "last_name": owner.last_name,
+            "email": owner.email
+        }
+
+        data.pop("owner_id", None)
+        return data, 200
 
     @api.expect(place_model)
     @api.response(200, 'Place updated successfully')
@@ -64,4 +93,19 @@ class PlaceResource(Resource):
     def put(self, place_id):
         """Update a place's information"""
         # Placeholder for the logic to update a place by ID
-        pass
+        new_place_data = api.payload
+        place = facade.get_place(place_id)
+
+        if not place:
+            return {"error": "Place not found"}, 404
+        
+        required_field = ["title", "description", "price", "latitude",
+                          "longitude", "owner_id"]
+        for field in required_field:
+            if field not in new_place_data:
+                return {"error": f"Missing required field: {field}"}, 400
+        
+        facade.update_place(place_id, new_place_data)
+        updated_place = facade.get_place(place_id)
+
+        return updated_place.to_dict()

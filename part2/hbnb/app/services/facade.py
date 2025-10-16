@@ -44,10 +44,25 @@ class HBnBFacade:
     
     # Place methods
     def create_place(self, place_data):
-    # Placeholder for logic to create a place, including validation for price, latitude, and longitude
+        owner_id = place_data.get("owner_id")
+        if owner_id:
+            if not self.user_repo.get(owner_id):
+                raise LookupError(f"Owner id not found: {owner_id}")
+
+        amenities_ids = place_data.pop("amenities", None)
         place = Place(**place_data)
+
+        if amenities_ids:
+            for amenity_id in amenities_ids:
+                amenity = self.amenity_repo.get(amenity_id)
+                if amenity:
+                    place.add_amenity(amenity)
+                else:
+                    raise LookupError(f"Amenity id not found: {amenity_id}")
+
         self.place_repo.add(place)
         return place
+
 
     def get_place(self, place_id):
         # Placeholder for logic to retrieve a place by ID, including associated owner and amenities
