@@ -8,3 +8,10 @@ class Review(Base):
         self.user = user
         self.rating = rating
         self.comment = comment
+
+    def to_dict(self):
+        return {
+            "comment": self.comment,
+            "rating": self.rating,
+            "user_id": user.
+        }
