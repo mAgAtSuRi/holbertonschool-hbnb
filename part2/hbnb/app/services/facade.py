@@ -82,18 +82,22 @@ class HBnBFacade:
         return review
 
     def get_review(self, review_id):
-        return self.get_review(review_id)
+        return self.review_repo.get(review_id)
 
     def get_all_reviews(self):
-        return self.get_all_reviews()
+        return self.review_repo.get_all()
 
     def get_reviews_by_place(self, place_id):
-        place = self.place_repo.get_by_attribute(place_id, "place_id")
-        for review in place["review"]:
-        
+        return [review for review in self.review_repo.get_all()
+                if review.place_id == place_id]   
 
     def update_review(self, review_id, review_data):
-        self.place_repo.update(review_id, review_data)
+        review = self.review_repo.update(review_id, review_data)
+        return review
 
     def delete_review(self, review_id):
-        pass
+        review = self.review_repo.get(review_id)
+        if not review:
+            return None
+        self.review_repo.delete(review_id)
+        return review

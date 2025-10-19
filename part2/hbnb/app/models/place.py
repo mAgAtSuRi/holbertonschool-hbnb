@@ -50,7 +50,7 @@ class Place(Base):
 
     @longitude.setter
     def longitude(self, value):
-        if  value < -180 or value > 180:
+        if value < -180 or value > 180:
             raise ValueError("longitude should be between -180 and 180")
         self._longitude = value
 
