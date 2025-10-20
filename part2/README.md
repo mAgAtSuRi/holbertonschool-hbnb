@@ -50,8 +50,7 @@ curl -X PUT "http://127.0.0.1:5000/api/v1/users/<USER_ID>" \
 | `/api/v1/users/<user_id>` | GET | Valid ID | 200 OK, JSON with user | ✅ Matches | Retrieve existing user |
 | `/api/v1/users/<user_id>` | GET | Non-existent ID | 404 Not Found, `{ "error": "User not found" }` | ✅ Matches | Error handling |
 | `/api/v1/users/<user_id>` | PUT | `{ "first_name": "Johnny", "last_name": "Doe", "email": "johnny.doe@example.com" }` | 200 OK, JSON updated | ✅ Matches (assumed) | Update user |
-| `/api/v1/users/<user_id>` | PUT | `{ "first_name": "", "last_name": "Doe", "email": "invalid-email" }` | 400 Bad Request | ✅ Matches (assumed) | Invalid update |
-| `/api/v1/users/<user_id>` | DELETE | Valid ID | 200 OK, `{ "message": "user deleted successfully" }` | ✅ Matches (assumed) | Delete user |
+| `/api/v1/users/<user_id>` | PUT | `{ "first_name": "", "last_name": "Doe", "email": "invalid-email" }` | 400 Bad Request | ✅ Matches | Invalid update |
 
 ---
 
@@ -130,7 +129,7 @@ curl -X DELETE "http://127.0.0.1:5000/api/v1/reviews/<REVIEW_ID>"
 | `/api/v1/reviews/` | POST | `{ "user_id": "<user_id>", "place_id": "<place_id>", "comment": "Excellent stay!", "rating": 5 }` | 201 Created, JSON review | ✅ Matches | Positive test |
 | `/api/v1/reviews/` | POST | `{ "user_id": "<user_id>", "place_id": "<place_id>", "comment": "Invalid rating test", "rating": 10 }` | 400 Bad Request | ✅ Matches | Rating validation (1–5) |
 | `/api/v1/reviews/<review_id>` | PUT | `{ "comment": "Very pleasant stay", "rating": 4 }` | 200 OK, JSON updated | ✅ Matches | Valid update |
-| `/api/v1/reviews/<review_id>` | PUT | `{ "comment": "", "rating": 4 }` | 400 Bad Request | ✅ Matches (assumed) | Non-empty comment validation |
+| `/api/v1/reviews/<review_id>` | PUT | `{ "comment": "", "rating": 4 }` | 400 Bad Request | ✅ Matches | Non-empty comment validation |
 | `/api/v1/reviews/<review_id>` | DELETE | Existing review | 200 OK, `{ "message": "review deleted successfully" }` | ✅ Matches | Delete review |
 
 ---
@@ -159,11 +158,10 @@ curl -X PUT "http://127.0.0.1:5000/api/v1/amenities/<AMENITY_ID>" \
 
 | Endpoint | Method | Input | Expected Output | Actual Output | Notes |
 |----------|--------|-------|-----------------|---------------|-------|
-| `/api/v1/amenities/` | POST | `{ "name": "Swimming Pool", "description": "Large outdoor pool" }` | 201 Created, JSON amenity | ✅ Matches (assumed) | Create amenity |
-| `/api/v1/amenities/<amenity_id>` | GET | Valid ID | 200 OK, JSON amenity | ✅ Matches (assumed) | Retrieve amenity |
+| `/api/v1/amenities/` | POST | `{ "name": "Swimming Pool", "description": "Large outdoor pool" }` | 201 Created, JSON amenity | ✅ Matches | Create amenity |
+| `/api/v1/amenities/<amenity_id>` | GET | Valid ID | 200 OK, JSON amenity | ✅ Matches | Retrieve amenity |
 | `/api/v1/amenities/<amenity_id>` | GET | Non-existent ID | 404 Not Found | ✅ Matches (assumed) | Error handling |
-| `/api/v1/amenities/<amenity_id>` | PUT | `{ "name": "Spa" }` | 200 OK, JSON updated | ✅ Matches (assumed) | Update amenity |
-| `/api/v1/amenities/<amenity_id>` | DELETE | Valid ID | 200 OK, `{ "message": "amenity deleted successfully" }` | ✅ Matches (assumed) | Delete amenity |
+| `/api/v1/amenities/<amenity_id>` | PUT | `{ "name": "Spa" }` | 200 OK, JSON updated | ✅ Matches | Update amenity |
 
 ---
 
