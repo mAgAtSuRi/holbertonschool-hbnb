@@ -49,7 +49,7 @@ curl -X PUT "http://127.0.0.1:5000/api/v1/users/<USER_ID>" \
 | `/api/v1/users/` | POST | `{ "first_name": "", "last_name": "", "email": "invalid-email" }` | 400 Bad Request, error message | ✅ Matches | Negative test, field validation |
 | `/api/v1/users/<user_id>` | GET | Valid ID | 200 OK, JSON with user | ✅ Matches | Retrieve existing user |
 | `/api/v1/users/<user_id>` | GET | Non-existent ID | 404 Not Found, `{ "error": "User not found" }` | ✅ Matches | Error handling |
-| `/api/v1/users/<user_id>` | PUT | `{ "first_name": "Johnny", "last_name": "Doe", "email": "johnny.doe@example.com" }` | 200 OK, JSON updated | ✅ Matches (assumed) | Update user |
+| `/api/v1/users/<user_id>` | PUT | `{ "first_name": "Johnny", "last_name": "Doe", "email": "johnny.doe@example.com" }` | 200 OK, JSON updated | ✅ Matches | Update user |
 | `/api/v1/users/<user_id>` | PUT | `{ "first_name": "", "last_name": "Doe", "email": "invalid-email" }` | 400 Bad Request | ✅ Matches | Invalid update |
 
 ---
