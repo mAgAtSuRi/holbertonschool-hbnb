@@ -160,7 +160,7 @@ curl -X PUT "http://127.0.0.1:5000/api/v1/amenities/<AMENITY_ID>" \
 |----------|--------|-------|-----------------|---------------|-------|
 | `/api/v1/amenities/` | POST | `{ "name": "Swimming Pool", "description": "Large outdoor pool" }` | 201 Created, JSON amenity | ✅ Matches | Create amenity |
 | `/api/v1/amenities/<amenity_id>` | GET | Valid ID | 200 OK, JSON amenity | ✅ Matches | Retrieve amenity |
-| `/api/v1/amenities/<amenity_id>` | GET | Non-existent ID | 404 Not Found | ✅ Matches (assumed) | Error handling |
+| `/api/v1/amenities/<amenity_id>` | GET | Non-existent ID | 404 Not Found | ✅ Matches | Error handling |
 | `/api/v1/amenities/<amenity_id>` | PUT | `{ "name": "Spa" }` | 200 OK, JSON updated | ✅ Matches | Update amenity |
 
 ---
