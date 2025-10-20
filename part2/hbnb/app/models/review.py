@@ -9,12 +9,21 @@ class Review(Base):
         self.rating = rating
         self.comment = comment
 
+    @property
+    def rating(self):
+        return self._rating
+
+    @rating.setter
+    def rating(self, value):
+        if not 1 <= value <= 5 or not isinstance(value, int):
+            raise ValueError("Rating must be a number between 1 and 5")
+        self._rating = value
+
     def to_dict(self):
         return {
             "id": self.id,
             "user_id": self.user_id,
             "place_id": self.place_id,
             "comment": self.comment,
-            "rating": self.rating,
-            
+            "rating": self.rating         
         }

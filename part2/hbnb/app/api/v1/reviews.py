@@ -26,17 +26,20 @@ class ReviewList(Resource):
         for field in required_field:
             if field not in review_data:
                 return {"error": f"Missing required field: {field}"}, 400
-        
+
         user = facade.get_user(review_data["user_id"])
         if not user:
             return {"error": f"User id not found: {review_data["user_id"]}"}, 404
-        
+
         place = facade.get_place(review_data["place_id"])
         if not place:
             return {"error": f"Place id not found: {review_data['place_id']}"}, 404
 
-        new_review = facade.create_review(review_data)
-        return new_review.to_dict(), 201
+        try:
+            new_review = facade.create_review(review_data)
+            return new_review.to_dict(), 201
+        except ValueError as e:
+            return {"error": str(e)}, 400
 
     @api.response(200, 'List of reviews retrieved successfully')
     def get(self):
