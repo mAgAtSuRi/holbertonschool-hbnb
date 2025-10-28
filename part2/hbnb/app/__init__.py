@@ -4,7 +4,12 @@ from .api.v1.users import api as users_ns
 from .api.v1.amenities import api as amenities_ns
 from .api.v1.places import api as places_ns
 from .api.v1.reviews import api as reviews_ns
+from .api.v1.auth import api as auth_ns
 from config import config
+from flask_jwt_extended import JWTManager
+
+
+jwt = JWTManager()
 
 
 def create_app(config_name="development"):
@@ -21,4 +26,8 @@ def create_app(config_name="development"):
     api.add_namespace(places_ns, path='/api/v1/places')
     # Register the reviews namespace
     api.add_namespace(reviews_ns, path='/api/v1/reviews')
+    # Login
+    api.add_namespace(auth_ns, path='/api/v1/auth')
+
+    jwt.init_app(app)
     return app

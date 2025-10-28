@@ -1,4 +1,5 @@
 from flask_restx import Namespace, Resource, fields
+from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt
 from ...services import facade
 
 api = Namespace('places', description='Place operations')
@@ -33,6 +34,8 @@ place_model = api.model('Place', {
 
 @api.route('/')
 class PlaceList(Resource):
+    @api.doc(security='Bearer')
+    @jwt_required()
     @api.expect(place_model)
     @api.response(201, 'Place successfully created')
     @api.response(400, 'Invalid input data')
@@ -40,6 +43,10 @@ class PlaceList(Resource):
         """Register a new place"""
         # Placeholder for the logic to register a new place
         place_data = api.payload
+        current_user = get_jwt_identity()
+        claims = get_jwt()
+        if current_user != place_data.get('owner_id') and not claims.get("is_admin", False):
+            return {"error": "Access forbidden"}, 403
 
         required_field = ["title", "description", "price", "latitude",
                           "longitude", "owner_id"]
@@ -61,6 +68,7 @@ class PlaceList(Resource):
         return [{"id": place.id, "title": place.title,
                 "latitude": place.latitude, "longitude": place.longitude}
                 for place in places]
+
 
 @api.route('/<place_id>')
 class PlaceResource(Resource):
@@ -86,6 +94,8 @@ class PlaceResource(Resource):
         data.pop("owner_id", None)
         return data, 200
 
+    @api.doc(security='Bearer')
+    @jwt_required()
     @api.expect(place_model)
     @api.response(200, 'Place updated successfully')
     @api.response(404, 'Place not found')
@@ -94,17 +104,22 @@ class PlaceResource(Resource):
         """Update a place's information"""
         # Placeholder for the logic to update a place by ID
         new_place_data = api.payload
+        current_user = get_jwt_identity()
+        claims = get_jwt() 
         place = facade.get_place(place_id)
 
         if not place:
             return {"error": "Place not found"}, 404
-        
+     
+        if current_user != place.owner_id and not claims.get("is_admin", False):
+            return {"error": "Access forbidden"}, 403
+
         required_field = ["title", "description", "price", "latitude",
                           "longitude", "owner_id"]
         for field in required_field:
             if field not in new_place_data:
                 return {"error": f"Missing required field: {field}"}, 400
-        
+   
         facade.update_place(place_id, new_place_data)
         updated_place = facade.get_place(place_id)
 

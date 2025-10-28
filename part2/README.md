@@ -35,11 +35,8 @@ curl -X GET "http://127.0.0.1:5000/api/v1/users/<USER_ID>"
 Example to PUT (modify) a user:
 curl -X PUT "http://127.0.0.1:5000/api/v1/users/<USER_ID>" \
 -H "Content-Type: application/json" \
--d '{
-    "first_name": "Jane",
-    "last_name": "Doe",
-    "email": "jane.doe@example.com"
-}'
+-d '{"first_name": "Jane", "last_name": "Doe", "email": "jane.doe@example.com"}'
+
 
 ### Endpoints Tested
 

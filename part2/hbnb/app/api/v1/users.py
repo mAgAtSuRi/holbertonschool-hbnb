@@ -1,4 +1,5 @@
 from flask_restx import Namespace, Resource, fields
+from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt
 from ...services import facade
 
 api = Namespace("users", description="User operations")
@@ -19,7 +20,14 @@ user_model = api.model(
 
 @api.route("/")
 class UserList(Resource):
+    @api.doc(security='Bearer')
+    @api.response(403, "Access forbidden")
+    @jwt_required()
     def get(self):
+        # Only admin can get the user list
+        claims = get_jwt()
+        if not claims.get("is_admin", False):
+            return {"error": "Admin access required"}, 403
         return [element.to_dict() for element in facade.get_all_users()]
 
     @api.expect(user_model, validate=True)
@@ -29,9 +37,6 @@ class UserList(Resource):
     def post(self):
         """Register a new user"""
         user_data = api.payload
-
-        #       Simulate email uniqueness check
-        #       (to be replaced by real validation with persistence)
         existing_user = facade.get_user_by_email(user_data["email"])
         if existing_user:
             return {"error": "Email already registered"}, 400
@@ -50,24 +55,39 @@ class UserList(Resource):
 
 @api.route("/<user_id>")
 class UserResource(Resource):
+    @api.doc(security='Bearer')
     @api.response(200, "User details retrieved successfully")
     @api.response(404, "User not found")
+    @jwt_required()
     def get(self, user_id):
         """Get user details by ID"""
+        current_user_id = get_jwt_identity()
+        claims = get_jwt()
         user = facade.get_user(user_id)
         if not user:
             return {"error": "User not found"}, 404
+
+        if current_user_id != user_id and not claims.get("is_admin", False):
+            return {"error": "Access forbidden"}, 403
+
         return {
             "id": user.id,
             "first_name": user.first_name,
             "last_name": user.last_name,
             "email": user.email,
         }, 200
-   
+
+    @api.doc(security='Bearer')
     @api.response(200, "User details retrieved successfully")
     @api.response(400, "Bad request")
-    @api.response(404, "User not found")  
+    @api.response(404, "User not found")
+    @jwt_required()
     def put(self, user_id):
+        current_user = get_jwt_identity()
+        claims = get_jwt()
+        if current_user != user_id and not claims.get("is_admin", False):
+            return {"error": "Access forbidden"}, 403
+
         new_user_data = api.payload
         user = facade.get_user(user_id)
 

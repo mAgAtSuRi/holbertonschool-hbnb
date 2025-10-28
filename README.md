@@ -92,3 +92,15 @@ Here are 4 Sequence diagrams representing the main API calls.
 - Fetching a list of places: a user creates a research to find a place with specific criterias. The facade calls listPlaces() and the BusinessLogic checks if a place exists with these criterias. If it doesn't, an empty list is sent to the user, otherwise the BusinessLogic fetches the place info and a list containing all the specific places is sent to the user.
 
 ![Fetch a List of Places](Hbnb_Sequence_Diagram_List_Places.png)
+
+tests pour authentification avec places : creer 2 utilisateurs :curl -X POST "http://127.0.0.1:5000/api/v1/users/" -H "Content-Type: application/json" -d '{
+  "first_name": "John",
+  "last_name": "Doe",
+  "email": "john.doe@example.com",
+  "password": "securepassword"
+}'
+puis get leurs tokens curl -X POST "http://127.0.0.1:5000/api/v1/auth/login" -H "Content-Type: application/json" -d '{
+  "email": "john.doe@example.com",
+  "password": "securepassword"
+}'
+puis executer ./test_places_auto.sh
