@@ -54,6 +54,10 @@ class PlaceList(Resource):
             if not place_data.get(field):
                 return {"error": f"Missing required field: {field}"}, 400
 
+        owner = facade.get_user(place_data['owner_id'])
+        if not owner:
+            return {"error": f"Owner id not found: {place_data['owner_id']}"}, 404
+
         try:
             new_place = facade.create_place(place_data)
             return new_place.to_dict(), 201

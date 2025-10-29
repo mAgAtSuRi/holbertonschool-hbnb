@@ -1,4 +1,5 @@
 from flask_restx import Namespace, Resource, fields
+from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt
 from ...services import facade
 
 api = Namespace("amenities", description="Amenity operations")
@@ -17,11 +18,17 @@ amenity_model = api.model(
 
 @api.route("/")
 class AmenityList(Resource):
+    @api.doc(security='Bearer')
+    @jwt_required()
     @api.expect(amenity_model)
     @api.response(201, "Amenity successfully created")
     @api.response(400, "Invalid input data")
     def post(self):
         """Register a new amenity"""
+        claims = get_jwt()
+        if not claims.get("is_admin", False):
+            return {"error": "Access forbidden"}, 403
+
         # Placeholder for the logic to register a new amenity
         amenity_data = api.payload
         required_fields = ["name", "description"]
@@ -53,12 +60,18 @@ class AmenityResource(Resource):
 
         return amenity.to_dict(), 200
 
+    @api.doc(security='Bearer')
+    @jwt_required()
     @api.expect(amenity_model)
     @api.response(200, "Amenity updated successfully")
     @api.response(404, "Amenity not found")
     @api.response(400, "Invalid input data")
     def put(self, amenity_id):
-        """Update an amenity's information"""
+        """Update an existing amenity (admin only)"""
+        claims = get_jwt()
+        if not claims.get("is_admin", False):
+            return {"error": "Access forbidden"}, 403
+
         # Placeholder for the logic to update an amenity by ID
         new_amenity_data = api.payload
         amenity = facade.get_amenity(amenity_id)
