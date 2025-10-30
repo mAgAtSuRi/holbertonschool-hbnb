@@ -1,20 +1,23 @@
-from ..persistence.repository import InMemoryRepository
 from ..models.user import User
 from ..models.amenity import Amenity
 from ..models.place import Place
 from ..models.review import Review
+from ..persistence.sqlalchemy_repository import SQLAlchemyRepository
+from app.persistence.user_repository import UserRepository
+from werkzeug.security import generate_password_hash
 
 
 class HBnBFacade:
     def __init__(self):
-        self.user_repo = InMemoryRepository()
-        self.amenity_repo = InMemoryRepository()
-        self.place_repo = InMemoryRepository()
-        self.review_repo = InMemoryRepository()
+        self.user_repo = UserRepository()
+        self.amenity_repo = SQLAlchemyRepository(Amenity)
+        self.place_repo = SQLAlchemyRepository(Place)
+        self.review_repo = SQLAlchemyRepository(Review)
 
 # User methods
     def create_user(self, user_data):
         user = User(**user_data)
+        user.hash_password(user_data['password'])
         self.user_repo.add(user)
         return user
 
@@ -22,12 +25,14 @@ class HBnBFacade:
         return self.user_repo.get(user_id)
 
     def get_user_by_email(self, email):
-        return self.user_repo.get_by_attribute('email', email)
-  
+        return self.user_repo.get_user_by_email(email)
+
     def get_all_users(self):
         return self.user_repo.get_all()
 
     def update(self, user_id, data):
+        if "password" in data:
+            data["password"] = generate_password_hash(data["password"])
         return self.user_repo.update(user_id, data)
 
 #   Amenity methods
@@ -44,7 +49,7 @@ class HBnBFacade:
 
     def update_amenity(self, amenity_id, amenity_data):
         return self.amenity_repo.update(amenity_id, amenity_data), 200
-    
+
     # Place methods
     def create_place(self, place_data):
         owner_id = place_data.get("owner_id")
