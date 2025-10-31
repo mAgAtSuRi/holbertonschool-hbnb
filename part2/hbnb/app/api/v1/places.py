@@ -89,7 +89,6 @@ class PlaceResource(Resource):
 
         data = place.to_dict()
         data["owner"] = {
-            "id": owner.id,
             "first_name": owner.first_name,
             "last_name": owner.last_name,
             "email": owner.email
@@ -114,7 +113,7 @@ class PlaceResource(Resource):
 
         if not place:
             return {"error": "Place not found"}, 404
-     
+
         if current_user != place.owner_id and not claims.get("is_admin", False):
             return {"error": "Access forbidden"}, 403
 
@@ -123,7 +122,12 @@ class PlaceResource(Resource):
         for field in required_field:
             if field not in new_place_data:
                 return {"error": f"Missing required field: {field}"}, 400
-   
+
+        try:
+            facade.update_place(place_id, new_place_data)
+        except ValueError as e:
+            return {"error": str(e)}, 400
+
         facade.update_place(place_id, new_place_data)
         updated_place = facade.get_place(place_id)
 

@@ -1,23 +1,27 @@
-from .base import Base
+from .baseclass import BaseModel
+from ..extensions import db
+from sqlalchemy.orm import validates
 
 
-class Review(Base):
-    def __init__(self, place_id, user_id, rating, comment):
-        super().__init__()
-        self.place_id = place_id
-        self.user_id = user_id
-        self.rating = rating
-        self.comment = comment
+class Review(BaseModel):
+    __tablename__ = "reviews"
 
-    @property
-    def rating(self):
-        return self._rating
+    place_id = db.Column(db.String(36), nullable=False)
+    user_id = db.Column(db.Integer, nullable=False)
+    rating = db.Column(db.Integer, nullable=False)
+    comment = db.Column(db.String(500), nullable=False) 
 
-    @rating.setter
-    def rating(self, value):
+    @validates("rating")
+    def validate_rating(self, key, value):
         if not 1 <= value <= 5 or not isinstance(value, int):
             raise ValueError("Rating must be a number between 1 and 5")
-        self._rating = value
+        return value
+
+    @validates("comment")
+    def validate_comment(self, key, value):
+        if not value or not value.strip():
+            raise ValueError("Comment can't be empty")
+        return value
 
     def to_dict(self):
         return {
@@ -25,5 +29,5 @@ class Review(Base):
             "user_id": self.user_id,
             "place_id": self.place_id,
             "comment": self.comment,
-            "rating": self.rating         
+            "rating": self.rating      
         }

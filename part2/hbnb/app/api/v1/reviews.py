@@ -65,6 +65,7 @@ class ReviewList(Resource):
         reviews = facade.review_repo.get_all()
         return [review.to_dict() for review in reviews]
 
+
 @api.route('/<review_id>')
 class ReviewResource(Resource):
     @api.response(200, 'Review details retrieved successfully')

@@ -4,6 +4,8 @@ from ..models.place import Place
 from ..models.review import Review
 from ..persistence.sqlalchemy_repository import SQLAlchemyRepository
 from app.persistence.user_repository import UserRepository
+from app.persistence.place_repository import PlaceRepository
+from app.persistence.review_repository import ReviewRepository
 from werkzeug.security import generate_password_hash
 
 
@@ -11,8 +13,8 @@ class HBnBFacade:
     def __init__(self):
         self.user_repo = UserRepository()
         self.amenity_repo = SQLAlchemyRepository(Amenity)
-        self.place_repo = SQLAlchemyRepository(Place)
-        self.review_repo = SQLAlchemyRepository(Review)
+        self.place_repo = PlaceRepository()
+        self.review_repo = ReviewRepository()
 
 # User methods
     def create_user(self, user_data):
@@ -57,22 +59,21 @@ class HBnBFacade:
             if not self.user_repo.get(owner_id):
                 raise LookupError(f"Owner id not found: {owner_id}")
 
-        amenities_ids = place_data.pop("amenities", None)
-        place = Place(**place_data)
+        # amenities_ids = place_data.pop("amenities", None)
+        place = self.place_repo.create(place_data)
 
-        if amenities_ids:
-            for amenity_id in amenities_ids:
-                amenity = self.amenity_repo.get(amenity_id)
-                if amenity:
-                    place.add_amenity(amenity)
-                else:
-                    raise LookupError(f"Amenity id not found: {amenity_id}")
+        # if amenities_ids:
+        #     for amenity_id in amenities_ids:
+        #         amenity = self.amenity_repo.get(amenity_id)
+        #         if amenity:
+        #             place.add_amenity(amenity)
+        #         else:
+        #             raise LookupError(f"Amenity id not found: {amenity_id}")
 
-        self.place_repo.add(place)
         return place
 
     def get_place(self, place_id):
-        return self.place_repo.get(place_id)
+        return self.place_repo.get_by_id(place_id)
 
     def get_all_places(self):
         return self.place_repo.get_all()
@@ -82,26 +83,23 @@ class HBnBFacade:
 
     # Review methods
     def create_review(self, review_data):
-        review = Review(**review_data)
-        self.review_repo.add(review)
-        return review
+        return self.review_repo.create(review_data)
 
     def get_review(self, review_id):
-        return self.review_repo.get(review_id)
+        return self.review_repo.get_by_id(review_id)
 
     def get_all_reviews(self):
         return self.review_repo.get_all()
 
     def get_reviews_by_place(self, place_id):
-        return [review for review in self.review_repo.get_all()
-                if review.place_id == place_id]   
+        return Review.query.filter_by(place_id=place_id).all()
 
     def update_review(self, review_id, review_data):
         review = self.review_repo.update(review_id, review_data)
         return review
 
     def delete_review(self, review_id):
-        review = self.review_repo.get(review_id)
+        review = self.review_repo.get_by_id(review_id)
         if not review:
             return None
         self.review_repo.delete(review_id)
