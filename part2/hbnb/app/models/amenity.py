@@ -1,11 +1,12 @@
-from .base import Base
+from .baseclass import BaseModel
+from ..extensions import db
 
 
-class Amenity(Base):
-    def __init__(self, name, description):
-        super().__init__()
-        self.name = name
-        self.description = description
+class Amenity(BaseModel):
+    __tablename__ = "amenities"
+
+    name = db.Column(db.String(128), nullable=False)
+    description = db.Column(db.String(256), nullable=False)
 
     def to_dict(self):
         return {
