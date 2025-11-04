@@ -6,8 +6,8 @@ from sqlalchemy import ForeignKey
 
 amenities_places = db.Table(
     'amenities_places',
-    db.Column('amenity_id', db.Integer, ForeignKey('amenities.id'), primary_key=True),
-    db.Column('place_id', db.Integer, ForeignKey('places.id'), primary_key=True)
+    db.Column('amenity_id', db.String(60), ForeignKey('amenities.id'), primary_key=True),
+    db.Column('place_id', db.String(60), ForeignKey('places.id'), primary_key=True)
 )
 
 
@@ -48,6 +48,11 @@ class Place(BaseModel):
             raise ValueError("Longitude shoud be between -180 and 180")
         return value
 
+    def add_amenity(self, amenity):
+        """Add an amenity to the place if not already added"""
+        if amenity not in self.amenities:
+            self.amenities.append(amenity)
+
     def update(self, data):
         """Prevent changing owner"""
         if "owner" in data:
@@ -63,4 +68,8 @@ class Place(BaseModel):
             "latitude": self.latitude,
             "longitude": self.longitude,
             "owner_id": self.owner_id,
+            "amenities": [
+                {"id": a.id, "name": a.name, "description": getattr(a, "description", None)}
+                for a in self.amenities
+            ] if self.amenities else []
         }

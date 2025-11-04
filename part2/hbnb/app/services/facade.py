@@ -3,6 +3,7 @@ from ..models.amenity import Amenity
 from ..models.place import Place
 from ..models.review import Review
 from ..persistence.sqlalchemy_repository import SQLAlchemyRepository
+from ..extensions import db
 from app.persistence.user_repository import UserRepository
 from app.persistence.place_repository import PlaceRepository
 from app.persistence.review_repository import ReviewRepository
@@ -70,6 +71,8 @@ class HBnBFacade:
                     place.add_amenity(amenity)
                 else:
                     raise LookupError(f"Amenity id not found: {amenity_id}")
+        db.session.add(place)
+        db.session.commit()
 
         return place
 
