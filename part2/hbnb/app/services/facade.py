@@ -60,16 +60,16 @@ class HBnBFacade:
             if not self.user_repo.get(owner_id):
                 raise LookupError(f"Owner id not found: {owner_id}")
 
-        # amenities_ids = place_data.pop("amenities", None)
+        amenities_ids = place_data.pop("amenities", None)
         place = self.place_repo.create(place_data)
 
-        # if amenities_ids:
-        #     for amenity_id in amenities_ids:
-        #         amenity = self.amenity_repo.get(amenity_id)
-        #         if amenity:
-        #             place.add_amenity(amenity)
-        #         else:
-        #             raise LookupError(f"Amenity id not found: {amenity_id}")
+        if amenities_ids:
+            for amenity_id in amenities_ids:
+                amenity = self.amenity_repo.get(amenity_id)
+                if amenity:
+                    place.add_amenity(amenity)
+                else:
+                    raise LookupError(f"Amenity id not found: {amenity_id}")
 
         return place
 
