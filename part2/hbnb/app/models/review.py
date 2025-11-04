@@ -1,13 +1,14 @@
 from .baseclass import BaseModel
 from ..extensions import db
 from sqlalchemy.orm import validates
+from sqlalchemy import ForeignKey
 
 
 class Review(BaseModel):
     __tablename__ = "reviews"
 
-    place_id = db.Column(db.String(36), nullable=False)
-    user_id = db.Column(db.Integer, nullable=False)
+    place_id = db.Column(db.String(36), ForeignKey('places.id'), nullable=False)
+    user_id = db.Column(db.Integer, ForeignKey('users.id'), nullable=False)
     rating = db.Column(db.Integer, nullable=False)
     comment = db.Column(db.String(500), nullable=False) 
 

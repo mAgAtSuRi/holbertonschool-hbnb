@@ -1,6 +1,14 @@
 from .baseclass import BaseModel
 from ..extensions import db
 from sqlalchemy.orm import validates
+from sqlalchemy import ForeignKey
+
+
+amenities_places = db.Table(
+    'amenities_places',
+    db.Column('amenity_id', db.Integer, ForeignKey('amenities.id'), primary_key=True),
+    db.Column('place_id', db.Integer, ForeignKey('places.id'), primary_key=True)
+)
 
 
 class Place(BaseModel):
@@ -11,7 +19,10 @@ class Place(BaseModel):
     price = db.Column(db.Float, nullable=False)
     latitude = db.Column(db.Float, nullable=False)
     longitude = db.Column(db.Float, nullable=False)
-    owner_id = db.Column(db.Integer, nullable=True)
+    owner_id = db.Column(db.Integer, ForeignKey('users.id'), nullable=True)
+    reviews = db.relationship("Review", backref='place', lazy=True)
+    amenities = db.relationship('Amenity', secondary=amenities_places, lazy='subquery',
+                                backref=db.backref('places', lazy=True))
 
     @validates("title")
     def validate_title(self, key, value):
