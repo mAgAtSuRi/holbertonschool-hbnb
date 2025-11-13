@@ -7,11 +7,9 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <header>
-        <nav>
-            <a href="login.html" id="login-link">Login</a>
-        </nav>
-    </header>
+    <div id="header-container"></div>
+
+
     <main>
         <section id="filter">
             <label for="price-filter">Max Price:</label>
@@ -19,10 +17,20 @@
                 <!-- Options will be populated dynamically -->
             </select>
         </section>
+
         <section id="places-list">
             <!-- List of places will be populated dynamically -->
+             <div class="place-card">
+                <h2 class="place-name">First house</h2>
+                <img src="images/first_house.jpg" alt="first_house image", width="700" height="400">
+                <p class="place-price">Price: 150$ per night</p>
+                <button class="details-button" onclick="location.href='place.html'">View details</button>
+             </div>
         </section>
     </main>
+
+    <div id="footer-container"></div>
+
     <script src="scripts.js"></script>
 </body>
 </html>

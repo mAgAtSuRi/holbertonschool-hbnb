@@ -7,13 +7,38 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <div id="header-container"></div>
+
     <main>
         <section id="place-details">
             <!-- Place details will be populated dynamically -->
+            <!-- for now it's not dynamic -->
+            <h2>Beach House</h2>
+            <p>Hosted by: Alice</p>
+            <p>Price: $120 per night</p>
+            <p>Description: Beautiful house by the sea with 3 bedrooms...</p>
         </section>
+
+        <section class="place-info">
+            <h3>Amenities</h3>
+            <ul>
+                <li>WiFi</li>
+                <li>Parking</li>
+                <li>Swimming Pool</li>
+            </ul>
+        </section>
+
         <section id="reviews">
             <!-- Reviews will be populated dynamically -->
+             <!-- static for now -->
+            <div class="review-card">
+                <h3>Reviews:</h3>
+                <p>"Amazing stay!"</p>
+                <p>— John Doe</p>
+                <p>Rating: 5/5</p>
+            </div>
         </section>
+
         <section id="add-review">
             <h2>Add a Review</h2>
             <form id="review-form">
@@ -24,6 +49,8 @@
             </form>
         </section>
     </main>
+
+    <div id="footer-container"></div>
     <script src="scripts.js"></script>
 </body>
 </html>

@@ -1,7 +1,9 @@
-/* 
-  This is a SAMPLE File to get you started. Follow the instructions on the project to complete the tasks. 
-  You'll probably need to override some of theese styles.
-*/
+:root {
+    --background-color: #F3E9DC;
+    --header-color: #D96F32;
+    --text-color: #484848;
+    --card-background-color: #F8B259;
+}
 
 * {
     box-sizing: border-box;
@@ -11,22 +13,70 @@
 }
 
 body {
-    background-color: #f4f4f4;
-    color: #333;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    margin: 0;
 }
 
+main {
+    flex: 1;
+}
 header {
-    background-color: #333;
-    color: #fff;
+    background-color: var(--header-color);
     padding: 1rem;
 }
 
 nav a {
-    color: #fff;
+    color: var(--text-color);
     text-decoration: none;
     margin-left: 1rem;
 }
 
 main {
     padding: 2rem;
+}
+
+.place-card {
+    margin: 20px;
+    padding: 10px;
+    border-radius: 10px;
+    background-color: var(--card-background-color);
+}
+
+.place-card img {
+    display: flex;
+    margin: 0 auto;   
+    max-width: 100%;
+    height: auto;
+    border-radius: 10px;
+}
+
+.review-card {
+    margin: 20px;
+    padding: 10px;
+    border-radius: 10px;
+    background-color: var(--card-background-color);
+}
+
+.place-name {
+    color: var(--header-color);
+    text-align: center;
+}
+
+.place-price {
+    color: var(--text-color);
+}
+
+.details-button {
+    color: var(--text-color);
+    background-color: var(--background-color);
+    border-color: var(--background-color);
+    border-radius:3px;
+}
+
+footer {
+    padding: 10px 0;
 }
