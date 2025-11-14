@@ -10,15 +10,16 @@
     <div id="header-container"></div>
 
     <main>
-        <section id="place-details">
-            <!-- Place details will be populated dynamically -->
-            <!-- for now it's not dynamic -->
+
+        <!-- PLACE DETAILS -->
+        <section class="place-details">
             <h2>Beach House</h2>
             <p>Hosted by: Alice</p>
             <p>Price: $120 per night</p>
             <p>Description: Beautiful house by the sea with 3 bedrooms...</p>
         </section>
 
+        <!-- AMENITIES -->
         <section class="place-info">
             <h3>Amenities</h3>
             <ul>
@@ -28,26 +29,28 @@
             </ul>
         </section>
 
+        <!-- REVIEWS -->
         <section id="reviews">
-            <!-- Reviews will be populated dynamically -->
-             <!-- static for now -->
+            <h3>Reviews</h3>
+
             <div class="review-card">
-                <h3>Reviews:</h3>
                 <p>"Amazing stay!"</p>
-                <p>— John Doe</p>
+                <p><strong>John Doe</strong></p>
                 <p>Rating: 5/5</p>
             </div>
         </section>
 
-        <section id="add-review">
+        <!-- ADD REVIEW -->
+        <section class="add-review">
             <h2>Add a Review</h2>
-            <form id="review-form">
+            <form id="review-form" class="form">
                 <label for="review-text">Review:</label>
                 <textarea id="review-text" name="review-text" required></textarea>
-                
+
                 <button type="submit">Submit</button>
             </form>
         </section>
+
     </main>
 
     <div id="footer-container"></div>
