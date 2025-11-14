@@ -25,13 +25,19 @@ body {
     margin: 0;
 }
 
-main {
-    flex: 1;
-}
 header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     background-color: var(--header-color);
     padding: 1rem;
 }
+
+main {
+    flex: 1;
+}
+
+
 
 nav a {
     color: var(--text-color);
