@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Place Details</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="header-container"></div>
+
+    <main>
+
+        <!-- PLACE DETAILS -->
+        <section class="place-details">
+            <h2>Beach House</h2>
+            <p>Hosted by: Alice</p>
+            <p>Price: $120 per night</p>
+            <p>Description: Beautiful house by the sea with 3 bedrooms...</p>
+        </section>
+
+        <!-- AMENITIES -->
+        <section class="place-info">
+            <h3>Amenities</h3>
+            <ul>
+                <li>WiFi</li>
+                <li>Parking</li>
+                <li>Swimming Pool</li>
+            </ul>
+        </section>
+
+        <!-- REVIEWS -->
+        <section id="reviews">
+            <h3>Reviews</h3>
+
+            <div class="review-card">
+                <p>"Amazing stay!"</p>
+                <p><strong>John Doe</strong></p>
+                <p>Rating: 5/5</p>
+            </div>
+        </section>
+
+        <!-- ADD REVIEW -->
+        <section class="add-review">
+            <h2>Add a Review</h2>
+            <form id="review-form" class="form">
+                <label for="review-text">Review:</label>
+                <textarea id="review-text" name="review-text" required></textarea>
+
+                <button type="submit">Submit</button>
+            </form>
+        </section>
+
+    </main>
+
+    <div id="footer-container"></div>
+    <script src="scripts.js"></script>
+</body>
+</html>
