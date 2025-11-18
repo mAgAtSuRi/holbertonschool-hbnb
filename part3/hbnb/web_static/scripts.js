@@ -4,6 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
     .then(response => response.text())
     .then(data => {
       document.getElementById("header-container").innerHTML = data;
+      checkAuthentification();
     });
 
   // --- Footer ---
@@ -34,7 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log('Server response:', data);
         if (data.access_token) {
           // login réussi, Stocker le token dans un cookie
-          document.cookie = `token=${data.access_token}; path=/`;
+          document.cookie = `token=${data.access_token}; path=/; max-age=86400`;;
           window.location.href = 'index.html';
         } else {
           alert('Login failed')
@@ -44,7 +45,33 @@ document.addEventListener('DOMContentLoaded', () => {
         console.error('Error:', error);
         alert('Login failed!');
       });
-
     });
   }
+
+  // ---AUTH CHECK---
+  function checkAuthentification() {
+    const token = getCookie('token');
+    const loginLink = document.getElementById('login-link');
+
+    if (!token) {
+      loginLink.textContent = "Login";
+      loginLink.href = "login.html";
+      loginLink.onclick = null;
+    } else {
+      loginLink.textContent = "Logout";  
+
+      loginLink.onclick = function(event) {
+        event.preventDefault();
+        document.cookie = "token=; Max-Age=0; path=/";
+        window.location.reload();
+      };
+      fetchPlaces(token);
+    }
+  }
+  function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';')[0];
+  }
 });
+
