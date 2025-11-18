@@ -33,8 +33,8 @@ document.addEventListener('DOMContentLoaded', () => {
       .then(data => {
         console.log('Server response:', data);
         if (data.access_token) {
-          // login réussi, stocker le token
-          localStorage.setItem('token', data.access_token);
+          // login réussi, Stocker le token dans un cookie
+          document.cookie = `token=${data.access_token}; path=/`;
           window.location.href = 'index.html';
         } else {
           alert('Login failed')
