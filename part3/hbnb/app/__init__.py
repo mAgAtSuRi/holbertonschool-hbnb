@@ -1,5 +1,6 @@
 from flask import Flask
 from flask_restx import Api
+from flask_cors import CORS
 from config import config
 from .extensions import db, jwt
 
@@ -14,6 +15,7 @@ from .services import facade
 def create_app(config_name="development"):
     app = Flask(__name__)
     app.config.from_object(config[config_name])
+    CORS(app)
     api = Api(app, version='1.0', title='HBnB API',
               description='HBnB Application API', doc='/api/v1/')
 
@@ -29,14 +31,15 @@ def create_app(config_name="development"):
     api.add_namespace(auth_ns, path='/api/v1/auth')
 
     # Create admin within application context
-    # with app.app_context():
-    #     if not facade.get_user_by_email("admin@example.com"):
-    #         facade.create_user({
-    #             "first_name": "Admin",
-    #             "last_name": "Admin",
-    #             "email": "admin@example.com",
-    #             "password": "admin123",
-    #             "is_admin": True
-    #         })
+    with app.app_context():
+        db.create_all()
+        if not facade.get_user_by_email("admin@example.com"):
+            facade.create_user({
+                "first_name": "Admin",
+                "last_name": "Admin",
+                "email": "admin@example.com",
+                "password": "admin123",
+                "is_admin": True
+            })
 
     return app
