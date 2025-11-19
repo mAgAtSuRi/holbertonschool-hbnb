@@ -34,6 +34,7 @@ place_model = api.model('Place', {
 
 @api.route('/')
 class PlaceList(Resource):
+
     @api.doc(security='Bearer')
     @jwt_required()
     @api.expect(place_model)
@@ -72,6 +73,7 @@ class PlaceList(Resource):
         return [{
             "id": place.id,
             "title": place.title,
+            "price": place.price,
             "latitude": place.latitude,
             "longitude": place.longitude,
             "amenities": [

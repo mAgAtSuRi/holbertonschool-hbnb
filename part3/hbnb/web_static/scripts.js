@@ -68,10 +68,84 @@ document.addEventListener('DOMContentLoaded', () => {
       fetchPlaces(token);
     }
   }
+
   function getCookie(name) {
     const value = `; ${document.cookie}`;
     const parts = value.split(`; ${name}=`);
     if (parts.length === 2) return parts.pop().split(';')[0];
   }
+
+  async function fetchPlaces(token) {
+    try {
+      const response = await fetch('http://127.0.0.1:5000/api/v1/places/', {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      const data = await response.json();
+      console.log(data);
+      return displayPlaces(data);
+
+    } catch (error) {
+      console.error("Error fetching places:", error);
+    }
+  }
+
+  function displayPlaces(places) {
+    const placesList = document.getElementById('places-list');
+    placesList.innerHTML = '';
+
+    if (!places || places.length === 0) {
+      placesList.innerHTML = "<p>No place found</p>";
+      return;
+    }
+
+    places.forEach(place => {
+      const card = document.createElement("div");
+      card.dataset.price = place.price;
+      card.classList.add("place-card");
+
+      card.innerHTML = `
+        <img src="${place.image_url || 'images/first_house.jpg'}"
+            alt="${place.title}" width="700" height="400">
+
+        <h2 class="place-name">${place.title}</h2>
+
+        <div class="price-wrapper">
+          <p class="place-price">${place.price}</p>
+          <p class="place-price-text">/night</p>
+        </div>
+
+        <button class="details-button"
+          onclick="location.href='place.html?id=${place.id}'">View details</button>
+      `;
+
+      placesList.appendChild(card);
+    });
+  }
+
+  const priceFilter = document.getElementById('price-filter');
+  ['All', 100, 50, 10].forEach(value => {
+    const option = document.createElement('option');
+    option.value = value;
+    option.textContent = value;
+    priceFilter.appendChild(option);
+  });
+  
+  priceFilter.addEventListener('change', (event) => {
+    const maxPrice = event.target.value;
+    const cards = document.querySelectorAll('.place-card');
+
+    cards.forEach(card => {
+      const price = parseFloat(card.dataset.price);
+
+      if (maxPrice === 'All' || price <= parseFloat(maxPrice)) {
+        card.style.display = 'block';
+      } else {
+        card.style.display = 'none';
+      }
+    });
+  });
 });
 
