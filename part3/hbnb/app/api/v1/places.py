@@ -104,7 +104,18 @@ class PlaceResource(Resource):
             "last_name": owner.last_name,
             "email": owner.email
         }
-
+        reviews = facade.get_reviews_by_place(place_id)
+        reviews_list = []
+        for r in reviews:
+            user = facade.get_user(r.user_id)
+            reviews_list.append({
+                "id": r.id,
+                "comment": r.comment,
+                "rating": r.rating,
+                "user_name": f"{user.first_name} {user.last_name}" if user else "Anonymous"
+            })
+        data["reviews"] = reviews_list
+        
         data.pop("owner_id", None)
         return data, 200
 

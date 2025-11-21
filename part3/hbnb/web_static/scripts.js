@@ -9,13 +9,13 @@ document.addEventListener('DOMContentLoaded', () => {
     return null;
   }
 
-  // --- GET PLACE ID FROM URL ---
+  // --- GET PLACE ID ---
   function getPlaceIdFromURL() {
     const searchParams = new URLSearchParams(window.location.search);
     return searchParams.get('id');
   }
 
-  // --- LOGIN / LOGOUT AUTHENTICATION ---
+  // --- LOGIN / LOGOUT UI ---
   function checkAuthentification() {
     const token = getCookie('token');
     const loginLink = document.getElementById('login-link');
@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
       loginLink.onclick = null;
     } else {
       loginLink.textContent = "Logout";
-      loginLink.onclick = function(event) {
+      loginLink.onclick = (event) => {
         event.preventDefault();
         document.cookie = "token=; Max-Age=0; path=/";
         window.location.reload();
@@ -38,32 +38,37 @@ document.addEventListener('DOMContentLoaded', () => {
     return token;
   }
 
-  // --- REVIEWS AUTHENTICATION ---
+  // --- REVIEWS AUTH / AFTER LOADING HEADER ---
   function checkAuthenticationReviews(token, placeId) {
     const addReviewSection = document.getElementById('add-review');
     if (!addReviewSection) return;
 
-    if (!token) {
-      // User not logged in → hide form
-      addReviewSection.style.display = 'none';
-    } else {
-      // User logged in → show form
-      addReviewSection.style.display = 'block';
-    }
+    if (!token) addReviewSection.style.display = 'none';
+    else addReviewSection.style.display = 'block';
 
     fetchPlaceDetails(token, placeId);
   }
 
-  // --- HEADER ---
+  // --- LOAD HEADER THEN RUN PAGE LOGIC ---
   fetch("header.html")
     .then(response => response.text())
     .then(data => {
       document.getElementById("header-container").innerHTML = data;
       const token = checkAuthentification();
-      fetchPlaces(token);
+
+      // INDEX PAGE: load all places
+      if (path.endsWith("index.html") || path.endsWith("/") || path.endsWith("web_static/")) {
+        fetchPlaces(token);
+      }
+
+      // PLACE PAGE: load place details
+      if (path.endsWith("place.html")) {
+        const placeId = getPlaceIdFromURL();
+        checkAuthenticationReviews(token, placeId);
+      }
     });
 
-  // --- FOOTER ---
+  // --- LOAD FOOTER ---
   fetch("footer.html")
     .then(response => response.text())
     .then(data => {
@@ -73,7 +78,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // --- LOGIN FORM ---
   const loginForm = document.getElementById("login-form");
   if (loginForm) {
-    loginForm.addEventListener('submit', function(event) {
+    loginForm.addEventListener('submit', (event) => {
       event.preventDefault();
       const email = document.getElementById('email').value;
       const password = document.getElementById('password').value;
@@ -83,23 +88,23 @@ document.addEventListener('DOMContentLoaded', () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password })
       })
-      .then(response => response.json())
-      .then(data => {
-        if (data.access_token) {
-          document.cookie = `token=${data.access_token}; path=/; max-age=86400`;
-          window.location.href = 'index.html';
-        } else {
-          alert('Login failed');
-        }
-      })
-      .catch(error => {
-        console.error('Error:', error);
-        alert('Login failed!');
-      });
+        .then(response => response.json())
+        .then(data => {
+          if (data.access_token) {
+            document.cookie = `token=${data.access_token}; path=/; max-age=86400`;
+            window.location.href = 'index.html';
+          } else {
+            alert('Login failed');
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          alert('Login failed!');
+        });
     });
   }
 
-  // --- FETCH AND DISPLAY ALL PLACES ---
+  // --- FETCH ALL PLACES (INDEX) ---
   async function fetchPlaces(token) {
     try {
       let options = {};
@@ -147,14 +152,16 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // --- FETCH PLACE DETAILS ---
+  // --- FETCH ONE PLACE (PLACE PAGE) ---
   async function fetchPlaceDetails(token, placeId) {
     if (!placeId) return;
     try {
       let options = {};
       if (token) options.headers = { 'Authorization': 'Bearer ' + token };
 
-      const response = await fetch(`http://127.0.0.1:5000/api/v1/places/${placeId}/`, options);
+      const response = await fetch(`http://127.0.0.1:5000/api/v1/places/${placeId}`, options);
+      console.log("Fetch place details status:", response.status);
+
       const data = await response.json();
       displayPlaceDetails(data);
     } catch (error) {
@@ -162,7 +169,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // --- DISPLAY PLACE DETAILS ---
+  // --- DISPLAY DETAILS ---
   function displayPlaceDetails(place) {
     const placeDetailsSection = document.querySelector('.place-details');
     if (!placeDetailsSection) return;
@@ -172,7 +179,7 @@ document.addEventListener('DOMContentLoaded', () => {
     title.textContent = place.title;
 
     const host = document.createElement('p');
-    host.textContent = `Hosted by: ${place.host_name || 'Unknown'}`;
+    host.textContent = `Hosted by: ${place.owner_id || 'Unknown'}`;
 
     const price = document.createElement('p');
     price.textContent = `Price: ${place.price}$ per night`;
@@ -201,8 +208,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const card = document.createElement('div');
         card.classList.add('review-card');
 
-        const text = document.createElement('p');
-        text.textContent = `"${review.text}"`;
+        const comment = document.createElement('p');
+        comment.textContent = `"${review.comment}"`;
 
         const author = document.createElement('p');
         author.innerHTML = `<strong>${review.user_name}</strong>`;
@@ -210,7 +217,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const rating = document.createElement('p');
         rating.textContent = `Rating: ${review.rating}/5`;
 
-        card.append(text, author, rating);
+        card.append(comment, author, rating);
         reviewsSection.appendChild(card);
       });
     }
@@ -230,16 +237,11 @@ document.addEventListener('DOMContentLoaded', () => {
       const maxPrice = event.target.value;
       document.querySelectorAll('.place-card').forEach(card => {
         const price = parseFloat(card.dataset.price);
-        card.style.display = (maxPrice === 'All' || price <= parseFloat(maxPrice)) ? 'block' : 'none';
+        card.style.display =
+          (maxPrice === 'All' || price <= parseFloat(maxPrice))
+            ? 'block'
+            : 'none';
       });
     });
   }
-
-  // --- EXECUTE TASK 3 ---
-  if (path.includes('place.html')) {
-    const placeId = getPlaceIdFromURL();
-    const token = getCookie('token');
-    checkAuthenticationReviews(token, placeId);
-  }
-
 });
